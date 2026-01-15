@@ -73,3 +73,9 @@ local_code/
 .env.local
 .env.*.local
 code/.env
+
+# Personal Interview Preparation (local only)
+INTERVIEW_PREP.md
+PROJECT_BRIEFING.md
+RESUME_BULLETS.md
+IMPLEMENTATION_SUMMARY.md
