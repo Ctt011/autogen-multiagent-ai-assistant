@@ -31,12 +31,12 @@ class AssistantCLI:
     def _print_welcome(self):
         """Print welcome message."""
         welcome_text = """
-# 🤖 Multi-Agent AI Assistant
+# Multi-Agent AI Assistant
 
 Welcome! I'm your AI assistant powered by multiple specialized agents:
 
-- **🌤️  WeatherAssistant**: Get weather forecasts and current conditions
-- **🔍 SearchAssistant**: Search the web and research topics
+- **WeatherAssistant**: Get weather forecasts and current conditions
+- **SearchAssistant**: Search the web and research topics
 
 **Commands:**
 - `/help` - Show this help message
@@ -103,7 +103,7 @@ Welcome! I'm your AI assistant powered by multiple specialized agents:
         command = user_input.lower().strip()
 
         if command in ["/quit", "/exit"]:
-            self.console.print("\n[cyan]Goodbye! 👋[/cyan]\n")
+            self.console.print("\n[cyan]Goodbye![/cyan]\n")
             return False
 
         elif command == "/help":
@@ -151,7 +151,7 @@ Welcome! I'm your AI assistant powered by multiple specialized agents:
             self.console.print()
             self.console.print(Panel(
                 Markdown(response) if response else "[dim]No response[/dim]",
-                title="🤖 Assistant",
+                title="Assistant",
                 border_style="cyan",
             ))
             self.console.print()
