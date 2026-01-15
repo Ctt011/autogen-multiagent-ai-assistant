@@ -8,16 +8,20 @@ import asyncio
 import sys
 from pathlib import Path
 from typing import Optional
+from datetime import datetime
+import uuid
 
 from rich.console import Console
 from rich.panel import Panel
 from rich.markdown import Markdown
 from rich.prompt import Prompt
+from rich.table import Table
 from rich import print as rprint
 
 from .agents import MultiAgentAssistant
 from .config import config
 from .logger import logger
+from .memory import ConversationMemory
 
 
 class AssistantCLI:
@@ -27,6 +31,8 @@ class AssistantCLI:
         """Initialize the CLI."""
         self.console = Console()
         self.assistant: Optional[MultiAgentAssistant] = None
+        self.memory = ConversationMemory()
+        self.session_id = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     def _print_welcome(self):
         """Print welcome message."""
@@ -41,6 +47,8 @@ Welcome! I'm your AI assistant powered by multiple specialized agents:
 **Commands:**
 - `/help` - Show this help message
 - `/agents` - List available agents
+- `/history` - View conversation history
+- `/stats` - Show memory statistics
 - `/clear` - Clear the screen
 - `/quit` or `/exit` - Exit the assistant
 
@@ -60,6 +68,8 @@ Welcome! I'm your AI assistant powered by multiple specialized agents:
 
 - `/help` - Show this help message
 - `/agents` - List available agents and their capabilities
+- `/history` - View recent conversation history
+- `/stats` - Show conversation memory statistics
 - `/clear` - Clear the terminal screen
 - `/quit`, `/exit` - Exit the assistant
 
@@ -90,6 +100,46 @@ Welcome! I'm your AI assistant powered by multiple specialized agents:
 
         self.console.print(Panel(Markdown(agents_text), border_style="blue"))
 
+    def _print_history(self):
+        """Print recent conversation history."""
+        messages = self.memory.get_session_history(self.session_id, limit=20)
+
+        if not messages:
+            self.console.print("[yellow]No conversation history yet.[/yellow]")
+            return
+
+        table = Table(title="Recent Conversation History", show_header=True, header_style="bold magenta")
+        table.add_column("Time", style="dim", width=8)
+        table.add_column("Role", width=10)
+        table.add_column("Message", ratio=1)
+
+        for msg in messages[-10:]:  # Show last 10
+            timestamp = datetime.fromisoformat(msg["timestamp"]).strftime("%H:%M:%S")
+            role = msg["role"].capitalize()
+            content = msg["content"][:80] + "..." if len(msg["content"]) > 80 else msg["content"]
+
+            if msg["agent_name"]:
+                role = f"{role} ({msg['agent_name']})"
+
+            table.add_row(timestamp, role, content)
+
+        self.console.print(table)
+        self.console.print(f"\n[dim]Total messages in this session: {len(messages)}[/dim]")
+
+    def _print_stats(self):
+        """Print conversation memory statistics."""
+        stats = self.memory.get_statistics()
+
+        stats_text = f"""## Conversation Memory Statistics
+
+- **Total Messages**: {stats['total_messages']}
+- **Total Sessions**: {stats['total_sessions']}
+- **Oldest Message**: {stats['oldest_message_age_days']} days ago
+- **Current Session**: {self.session_id}
+        """
+
+        self.console.print(Panel(Markdown(stats_text), border_style="magenta"))
+
     def _handle_command(self, user_input: str) -> bool:
         """
         Handle special commands.
@@ -115,6 +165,12 @@ Welcome! I'm your AI assistant powered by multiple specialized agents:
         elif command == "/clear":
             self.console.clear()
             self._print_welcome()
+
+        elif command == "/history":
+            self._print_history()
+
+        elif command == "/stats":
+            self._print_stats()
 
         else:
             self.console.print(f"[yellow]Unknown command: {command}[/yellow]")
@@ -144,8 +200,22 @@ Welcome! I'm your AI assistant powered by multiple specialized agents:
             query: User's query string
         """
         try:
+            # Save user message to memory
+            self.memory.save_message(
+                session_id=self.session_id,
+                role="user",
+                content=query
+            )
+
             with self.console.status("[bold cyan]Thinking...", spinner="dots"):
                 response = await self.assistant.process_message(query)
+
+            # Save assistant response to memory
+            self.memory.save_message(
+                session_id=self.session_id,
+                role="assistant",
+                content=response
+            )
 
             # Display the response
             self.console.print()

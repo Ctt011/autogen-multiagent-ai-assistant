@@ -50,6 +50,10 @@ configurations.py
 logs/
 *.log
 
+# Data (conversation database)
+code/data/
+*.db
+
 # Testing
 .pytest_cache/
 .coverage
