@@ -45,34 +45,15 @@ This project builds upon AutoGen fundamentals with significant custom implementa
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     User Interface Layer                     │
-│  ┌────────────────────┐         ┌────────────────────┐      │
-│  │  Interactive CLI   │         │   Slack Bot (TBD)  │      │
-│  │   (Rich Library)   │         │    FastAPI Server  │      │
-│  └─────────┬──────────┘         └──────────┬─────────┘      │
-└────────────┼───────────────────────────────┼────────────────┘
-             │                               │
-             └───────────────┬───────────────┘
-                             │
-             ┌───────────────▼───────────────┐
-             │   Multi-Agent Orchestrator    │
-             │    (MagenticOneGroupChat)     │
-             └───────────────┬───────────────┘
-                             │
-         ┌───────────────────┼───────────────────┐
-         │                   │                   │
-    ┌────▼────┐         ┌────▼────┐        ┌────▼────┐
-    │ Weather │         │ Search  │        │  Email  │
-    │Assistant│         │Assistant│        │Assistant│
-    └────┬────┘         └────┬────┘        └────┬────┘
-         │                   │                   │
-    ┌────▼────┐         ┌────▼────┐        ┌────▼────┐
-    │ Weather │         │ Tavily  │        │  Gmail  │
-    │  Tools  │         │  API    │        │   API   │
-    └─────────┘         └─────────┘        └─────────┘
-```
+![System Architecture](images/architecture.png)
+*4-layer architecture: User Interface → Memory & Persistence → Orchestration → Agents → External Services*
+
+The system follows a clean layered architecture:
+- **User Interface Layer**: Interactive CLI (Rich library) and future Slack Bot integration
+- **Memory & Persistence Layer**: SQLite-backed conversation storage with session management
+- **Orchestration Layer**: Multi-agent coordinator using AutoGen's MagenticOneGroupChat with GPT-4o
+- **Agent Layer**: Specialized agents (Weather, Search, Email) with domain-specific tools
+- **External Services Layer**: API integrations (Open-Meteo, Tavily, Gmail, OpenAI)
 
 ## Quick Start
 
