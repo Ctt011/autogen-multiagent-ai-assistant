@@ -19,7 +19,7 @@ A production-ready multi-agent AI system powered by AutoGen and GPT-4o, featurin
 
 This project builds upon AutoGen fundamentals with significant custom implementations:
 
-- **Interactive CLI Interface** - Beautiful terminal-based chat with Rich library (full custom implementation)
+- **Interactive CLI Interface** - Interactive terminal-based chat with Rich library (full custom implementation)
 - **Conversation Memory System** - SQLite-backed persistent conversation history with session management
 - **Modern Configuration Management** - Environment-based config with validation and dotenv support
 - **Structured Logging** - Comprehensive logging system with file + console outputs
