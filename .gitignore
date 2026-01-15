@@ -60,6 +60,7 @@ draft_README.md
 # Project specific
 Solution\ Methodology.pdf
 Solution Methdology.pdf
+Projectdetails.pdf
 readme.pdf
 local_code/
 
@@ -67,3 +68,4 @@ local_code/
 .env
 .env.local
 .env.*.local
+code/.env
