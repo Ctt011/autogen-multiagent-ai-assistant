@@ -8,6 +8,11 @@
 
 A production-ready multi-agent AI system powered by AutoGen and GPT-4o, featuring specialized autonomous agents for weather, search, email, and calendar management with an interactive CLI interface.
 
+## Preview
+
+![CLI Interface](images/cli-screenshot.png)
+*Interactive terminal interface built with Rich library, featuring conversation history, session management, and beautiful formatting*
+
 ## Features
 
 ### Custom Enhancements (My Contributions)
