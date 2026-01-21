@@ -158,6 +158,9 @@ Sources:
 | `/clear` | Clear the terminal screen |
 | `/quit` or `/exit` | Exit the assistant |
 
+![Agent and Stats Interface](images/Proj4_interface_agent_stats.png)
+*The `/agents` command shows available AI assistants, and `/stats` displays conversation memory analytics*
+
 ### Example Queries
 
 **Weather Information:**

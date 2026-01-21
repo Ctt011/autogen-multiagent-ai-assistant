@@ -6,6 +6,7 @@ This provides a user-friendly command-line interface for chatting with the assis
 
 import asyncio
 import sys
+import time
 from pathlib import Path
 from typing import Optional
 from datetime import datetime
@@ -207,8 +208,10 @@ Welcome! I'm your AI assistant powered by multiple specialized agents:
                 content=query
             )
 
+            start_time = time.time()
             with self.console.status("[bold cyan]Thinking...", spinner="dots"):
                 response = await self.assistant.process_message(query)
+            elapsed_time = time.time() - start_time
 
             # Save assistant response to memory
             self.memory.save_message(
@@ -221,7 +224,7 @@ Welcome! I'm your AI assistant powered by multiple specialized agents:
             self.console.print()
             self.console.print(Panel(
                 Markdown(response) if response else "[dim]No response[/dim]",
-                title="Assistant",
+                title=f"Assistant [dim](responded in {elapsed_time:.2f}s)[/dim]",
                 border_style="cyan",
             ))
             self.console.print()
